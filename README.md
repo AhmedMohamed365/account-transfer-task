@@ -84,9 +84,13 @@ python manage.py test
 
 Simply 
 ```bash
-docker build .  -t account-transfer-container 
+docker build -t account-transfer-container .
+ 
 
-docker run --name account-transfer-app --network="host"  -it account-transfer-container
+docker run --name account-transfer-app \
+  -p 8000:8000 \
+  -v "$(pwd)":/app \
+  -it account-transfer-container
 ```
 
 ## License
