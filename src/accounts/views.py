@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import csv
@@ -38,12 +39,12 @@ def account_detail(request, account_number):
 
 def transfer_funds(request):
     if request.method == 'POST':
-        from_account_number = request.POST['from_account']
-        to_account_number = request.POST['to_account']
-        amount = float(request.POST['amount'])
+        from_account_id = request.POST['from_account']
+        to_account_id = request.POST['to_account']
+        amount = Decimal(request.POST['amount'])
         
-        from_account = get_object_or_404(Account, account_number=from_account_number)
-        to_account = get_object_or_404(Account, account_number=to_account_number)
+        from_account = get_object_or_404(Account, id=from_account_id)
+        to_account = get_object_or_404(Account, id=to_account_id)
 
         if from_account.balance >= amount:
             from_account.balance -= amount
