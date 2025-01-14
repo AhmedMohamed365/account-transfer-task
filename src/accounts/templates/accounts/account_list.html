@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account List</title>
-</head>
-<body>
+
+<!-- Example of extending base.html in another template -->
+{% extends 'accounts/base.html' %}
+
+{% block content %}
     <h1>Account List</h1>
     <form method="get" action="{% url 'account_list' %}">
         <input type="text" name="search" placeholder="Search by name" value="{{ request.GET.search }}">
@@ -29,5 +26,4 @@
         </tbody>
     </table>
     <a href="{% url 'transfer_funds' %}">Transfer Funds</a>
-</body>
-</html>
+{% endblock %}

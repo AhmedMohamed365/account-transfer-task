@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfer Funds</title>
-</head>
-<body>
-    
+
+{% extends 'accounts/base.html' %}
+
+{% block content %}
 
     <h1>Transfer Funds Between Accounts</h1>
     <form method="POST" action="{% url 'transfer_funds' %}">
@@ -58,12 +53,17 @@
         });
     </script>
 
-{% if messages %}
-<ul>
+    {% if messages %}
+    <ul>
     {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
-</ul>
+    </ul>
 {% endif %}
-</body>
-</html>
+
+{% endblock %}
+
+
+    
+
+   
