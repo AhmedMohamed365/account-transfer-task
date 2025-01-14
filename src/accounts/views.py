@@ -2,22 +2,30 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import csv
 from .models import Account
+import pandas as pd
 
 def import_accounts(request):
     if request.method == 'POST' and request.FILES['file']:
-        csv_file = request.FILES['file']
-        if not csv_file.name.endswith('.csv'):
-            return HttpResponse("This is not a CSV file")
-        
-        decoded_file = csv_file.read().decode('utf-8')
-        io_string = io.StringIO(decoded_file)
-        next(io_string)  # Skip header row
-        for row in csv.reader(io_string, delimiter=','):
-            _, created = Account.objects.update_or_create(
-                account_number=row[0],
-                defaults={'balance': row[1]}
+        uploaded_file = request.FILES['file']
+        file_extension = uploaded_file.name.split('.')[-1]
+
+        if file_extension not in ['csv', 'xlsx', 'txt']:
+            return HttpResponse("Unsupported file type")
+
+        if file_extension == 'csv':
+            df = pd.read_csv(uploaded_file)
+        elif file_extension == 'xlsx':
+            df = pd.read_excel(uploaded_file)
+        elif file_extension == 'txt':
+            df = pd.read_csv(uploaded_file, delimiter='\t')
+
+        for _, row in df.iterrows():
+            Account.objects.update_or_create(
+                account_number=row['ID'],
+                defaults={'name': row['Name'], 'balance': row['Balance']}
             )
         return redirect('account_list')
+    
     return render(request, 'accounts/import.html')
 
 def account_list(request):

@@ -19,12 +19,12 @@
             {% for account in accounts %}
             <tr>
                 <td><a href="{% url 'account_detail' account.id %}">{{ account.account_number }}</a></td>
-                <td>{{ account.account_holder }}</td>
+                <td>{{ account.name }}</td>
                 <td>{{ account.balance }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'transfer' %}">Transfer Funds</a>
+    <a href="{% url 'transfer_funds' %}">Transfer Funds</a>
 </body>
 </html>
