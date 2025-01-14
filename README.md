@@ -14,7 +14,7 @@ This project is a simple web application built using Django that allows users to
 The project is organized as follows:
 
 ```
-account-transfer-app
+account-transfer-project
 ├── accounts
 │   ├── migrations          # Database migration files
 │   ├── templates           # HTML templates for the web interface
@@ -46,10 +46,11 @@ account-transfer-app
 1. **Clone the Repository**:
    ```
    git clone <repository-url>
-   cd account-transfer-app
+   cd account-transfer-project
    ```
 
 2. **Install Dependencies**:
+Used virtual env, but you can use pipenv for better depenency management or conda environment.
    ```
    pip install -r requirements.txt
    ```
@@ -82,7 +83,7 @@ python manage.py test
 
 ## To run using docker
 
-Simply 
+Simply run these commands to be able to use it and reflect anychange to the project directory inside the container.
 ```bash
 docker build -t account-transfer-container .
  
