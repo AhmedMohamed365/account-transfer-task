@@ -4,7 +4,7 @@
 {% block content %}
 
     <h1>Transfer Funds Between Accounts</h1>
-    <form method="POST" action="{% url 'transfer_funds' %}">
+    <form method="POST" action="{% url 'transfer_funds' %}" onsubmit="return validateForm()">
         {% csrf_token %}
         <label for="from_account">From Account:</label>
         <select name="from_account" id="from_account" required onchange="updateToAccountOptions()">
@@ -23,7 +23,7 @@
         </select>
         <br>
         <label for="amount">Amount:</label>
-        <input type="number" name="amount" id="amount" required>
+        <input type="number" name="amount" id="amount" required min="1" step="0.01">
         <br>
         <button type="submit">Transfer</button>
     </form>
@@ -47,6 +47,14 @@
             }
         }
 
+        function validateForm() {
+            const amount = document.getElementById('amount').value;
+            if (amount <= 0) {
+                alert('Amount must be greater than 0');
+                return false;
+            }
+            return true;
+        }
         // Initialize the to_account options on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateToAccountOptions();

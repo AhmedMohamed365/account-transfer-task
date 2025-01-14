@@ -54,9 +54,14 @@ def account_detail(request, id):
 @transaction.atomic
 def transfer_funds(request):
     if request.method == 'POST':
+        
         from_account_id = request.POST['from_account']
         to_account_id = request.POST['to_account']
         amount = Decimal(request.POST['amount'])
+        # Server-side validation for amount
+        if amount <= 0:
+            messages.error(request, 'Amount must be greater than 0.')
+            return redirect('transfer_funds')
         
         from_account = get_object_or_404(Account, id=from_account_id)
         to_account = get_object_or_404(Account, id=to_account_id)
