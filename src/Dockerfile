@@ -1,20 +1,30 @@
-# Use the official Python 3.11-slim image from the Docker Hub
+# Use the official Python 3.11 image as the base
 FROM python:3.11-slim
 
-# Set the working directory in the container
+# Set environment variables to avoid prompts during package installation
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Create a working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y build-essential libpq-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install the dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy the requirements file to the container
+COPY requirements.txt /app/
 
-# Copy the rest of the application code into the container
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
+# Copy the entire project into the working directory
 COPY . /app/
 
-# Expose the port the app runs on
+# Expose the default Django port
 EXPOSE 8000
 
-# Command to run the application
+# Run the application using Django's development server
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
