@@ -22,6 +22,7 @@ account-transfer-app
 │   │       ├── account_list.html   # Template for listing accounts
 │   │       ├── account_detail.html  # Template for account details
 │   │       └── transfer.html        # Template for fund transfer form
+│   │       └── base.html        # Base template for navbar and bootstrap styles
 │   ├── __init__.py
 │   ├── admin.py            # Admin site configuration
 │   ├── apps.py             # App configuration
@@ -70,9 +71,23 @@ account-transfer-app
 
 The project includes unit tests located in `accounts/tests.py` to ensure functionality and maintain coverage.
 
-## Optional Features
+To run the tests : 
+```bash
+python manage.py test
+```
 
+## Optional Features
+- Application is accepting any text format like .xlsx , .txt , .csv
 - A Dockerfile is provided for building a Docker image of the web app.
+
+## To run using docker
+
+Simply 
+```bash
+docker build .  -t account-transfer-container 
+
+docker run --name account-transfer-app --network="host"  -it account-transfer-container
+```
 
 ## License
 
