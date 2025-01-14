@@ -83,15 +83,13 @@ python manage.py test
 
 ## To run using docker
 
-Simply run these commands to be able to use it and reflect anychange to the project directory inside the container.
+Simply run these commands in "src" directory to be able to use it and reflect anychange to the project directory inside the container.
 ```bash
 docker build -t account-transfer-container .
- 
-
-docker run --name account-transfer-app \
-  -p 8000:8000 \
-  -v "$(pwd)":/app \
-  -it account-transfer-container
+ ```
+This command works on windows
+```
+docker run --name account-transfer-app -p 8000:8000 -v %cd%:/app -it account-transfer-container
 ```
 
 ## License
