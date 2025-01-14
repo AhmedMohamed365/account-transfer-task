@@ -6,4 +6,7 @@ class Account(models.Model):
     balance = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
+        return f'Account {self.name} - ID: {self.id}'
+    
+    def display_balance(self):
         return f'Account {self.name} - Balance: {self.balance}'

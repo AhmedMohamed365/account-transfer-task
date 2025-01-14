@@ -10,16 +10,16 @@
     <form method="POST" action="{% url 'transfer_funds' %}">
         {% csrf_token %}
         <label for="from_account">From Account:</label>
-        <select name="from_account" id="from_account" required>
+        <select name="from_account" id="from_account" required onchange="updateToAccountOptions()">
             {% for account in accounts %}
-                <option value="{{ account.id }}">{{ account.account_number }}</option>
+                <option value="{{ account.id }}">{{ account }}</option>
             {% endfor %}
         </select>
         <br>
         <label for="to_account">To Account:</label>
         <select name="to_account" id="to_account" required>
             {% for account in accounts %}
-                <option value="{{ account.id }}">{{ account.account_number }}</option>
+                <option value="{{ account.id }}">{{ account }}</option>
             {% endfor %}
         </select>
         <br>
@@ -30,5 +30,33 @@
     </form>
     <br>
     <a href="{% url 'account_list' %}">Back to Account List</a>
+
+    <script>
+        function updateToAccountOptions() {
+            const fromAccountSelect = document.getElementById('from_account');
+            const toAccountSelect = document.getElementById('to_account');
+            const selectedFromAccount = fromAccountSelect.value;
+
+            for (let i = 0; i < toAccountSelect.options.length; i++) {
+                const option = toAccountSelect.options[i];
+                if (option.value === selectedFromAccount) {
+                    option.style.display = 'none';
+
+                    if (toAccountSelect.value === selectedFromAccount) {
+                    toAccountSelect.value = ''; // Deselect the option
+                }
+
+                
+                } else {
+                    option.style.display = 'block';
+                }
+            }
+        }
+
+        // Initialize the to_account options on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateToAccountOptions();
+        });
+    </script>
 </body>
 </html>
