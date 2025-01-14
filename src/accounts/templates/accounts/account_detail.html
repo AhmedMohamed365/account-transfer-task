@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Account Detail</h1>
-    <p><strong>Account Number:</strong> {{ account.account_number }}</p>
+    <p><strong>Account Number:</strong> {{ account.id }}</p>
     <p><strong>Balance:</strong> ${{ account.balance }}</p>
     <a href="{% url 'account_list' %}">Back to Account List</a>
     <a href="{% url 'transfer' account.id %}">Transfer Funds</a>

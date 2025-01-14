@@ -5,6 +5,9 @@ import csv
 from .models import Account
 import pandas as pd
 
+from django.db import transaction
+
+
 def import_accounts(request):
     if request.method == 'POST' and request.FILES['file']:
         uploaded_file = request.FILES['file']
@@ -22,7 +25,7 @@ def import_accounts(request):
 
         for _, row in df.iterrows():
             Account.objects.update_or_create(
-                account_number=row['ID'],
+                id=row['ID'],
                 defaults={'name': row['Name'], 'balance': row['Balance']}
             )
         return redirect('account_list')
@@ -33,10 +36,13 @@ def account_list(request):
     accounts = Account.objects.all()
     return render(request, 'accounts/account_list.html', {'accounts': accounts})
 
-def account_detail(request, account_number):
-    account = get_object_or_404(Account, account_number=account_number)
+def account_detail(request, id):
+    account = get_object_or_404(Account, id=id)
     return render(request, 'accounts/account_detail.html', {'account': account})
 
+
+
+@transaction.atomic
 def transfer_funds(request):
     if request.method == 'POST':
         from_account_id = request.POST['from_account']
