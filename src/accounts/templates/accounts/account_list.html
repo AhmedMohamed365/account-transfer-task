@@ -7,20 +7,23 @@
 </head>
 <body>
     <h1>Account List</h1>
+    <form method="get" action="{% url 'account_list' %}">
+        <input type="text" name="search" placeholder="Search by name" value="{{ request.GET.search }}">
+        <button type="submit">Search</button>
+    </form>
+    <br>
     <table>
         <thead>
             <tr>
-                <th>Account Number</th>
-                <th>Account Holder</th>
-                <th>Balance</th>
+                <th><a href="?order_by=name">Name</a></th>
+                <th><a href="?order_by=balance">Balance</a></th>
             </tr>
         </thead>
         <tbody>
             {% for account in accounts %}
             <tr>
-                <td><a href="{% url 'account_detail' account.id %}">{{ account.id }}</a></td>
-                <td>{{ account.name }}</td>
-                <td>{{ account.balance }}</td>
+                <td><a href="{% url 'account_detail' account.id %}">{{ account.name }}</a></td>
+                <td>{{ account.balance }} $</td>
             </tr>
             {% endfor %}
         </tbody>

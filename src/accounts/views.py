@@ -5,6 +5,7 @@ import csv
 from .models import Account
 import pandas as pd
 
+from django.contrib import messages
 from django.db import transaction
 
 
@@ -33,7 +34,15 @@ def import_accounts(request):
     return render(request, 'accounts/import.html')
 
 def account_list(request):
+    search_query = request.GET.get('search', '')
+    order_by = request.GET.get('order_by', 'balance')
     accounts = Account.objects.all()
+    if search_query:
+        accounts = accounts.filter(name__icontains=search_query)
+
+    if order_by:
+        accounts = accounts.order_by(order_by)
+
     return render(request, 'accounts/account_list.html', {'accounts': accounts})
 
 def account_detail(request, id):
@@ -57,9 +66,11 @@ def transfer_funds(request):
             to_account.balance += amount
             from_account.save()
             to_account.save()
-            return redirect('account_list')
+            messages.success(request, f'Transfer completed successfully.\nYour balance is now {from_account.balance}')
+            #return redirect('account_list')
         else:
+            messages.error(request, 'Insufficient funds.')
             return HttpResponse("Insufficient funds")
     
-    accounts = Account.objects.all()
+    accounts = Account.objects.all() 
     return render(request, 'accounts/transfer.html', {'accounts': accounts})

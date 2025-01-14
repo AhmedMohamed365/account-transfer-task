@@ -6,20 +6,24 @@
     <title>Transfer Funds</title>
 </head>
 <body>
+    
+
     <h1>Transfer Funds Between Accounts</h1>
     <form method="POST" action="{% url 'transfer_funds' %}">
         {% csrf_token %}
         <label for="from_account">From Account:</label>
         <select name="from_account" id="from_account" required onchange="updateToAccountOptions()">
+            <option value="">Select an account</option>
             {% for account in accounts %}
-                <option value="{{ account.id }}">{{ account }}</option>
+                <option value="{{ account.id }}">{{ account.name }} ({{ account.account_number|slice:"0:8" }}...) - {{ account.balance }} $</option>
             {% endfor %}
         </select>
         <br>
         <label for="to_account">To Account:</label>
         <select name="to_account" id="to_account" required>
+            <option value="">Select an account</option>
             {% for account in accounts %}
-                <option value="{{ account.id }}">{{ account }}</option>
+                <option value="{{ account.id }}">{{ account.name }} ({{ account.account_number|slice:":8" }}...) - {{ account.balance }} $</option>
             {% endfor %}
         </select>
         <br>
@@ -28,8 +32,6 @@
         <br>
         <button type="submit">Transfer</button>
     </form>
-    <br>
-    <a href="{% url 'account_list' %}">Back to Account List</a>
 
     <script>
         function updateToAccountOptions() {
@@ -41,12 +43,9 @@
                 const option = toAccountSelect.options[i];
                 if (option.value === selectedFromAccount) {
                     option.style.display = 'none';
-
                     if (toAccountSelect.value === selectedFromAccount) {
-                    toAccountSelect.value = ''; // Deselect the option
-                }
-
-                
+                        toAccountSelect.value = ''; // Deselect the option
+                    }
                 } else {
                     option.style.display = 'block';
                 }
@@ -58,5 +57,13 @@
             updateToAccountOptions();
         });
     </script>
+
+{% if messages %}
+<ul>
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 </body>
 </html>
