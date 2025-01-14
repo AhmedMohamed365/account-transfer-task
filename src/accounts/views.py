@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 import csv
-from .models import Account
+from .models import Account, Transaction
 import pandas as pd
 
 from django.contrib import messages
@@ -47,7 +47,12 @@ def account_list(request):
 
 def account_detail(request, id):
     account = get_object_or_404(Account, id=id)
-    return render(request, 'accounts/account_detail.html', {'account': account})
+    outgoing_transactions = Transaction.objects.filter(from_account=account).order_by('-date')
+    incoming_transactions = Transaction.objects.filter(to_account=account).order_by('-date')
+    return render(request, 'accounts/account_detail.html',
+                   {'account': account,
+                    'incoming_transactions':incoming_transactions,
+                    'outgoing_transactions':outgoing_transactions})
 
 
 
@@ -71,11 +76,15 @@ def transfer_funds(request):
             to_account.balance += amount
             from_account.save()
             to_account.save()
+            # Create a transaction record
+            Transaction.objects.create(
+                from_account=from_account,
+                to_account=to_account,
+                amount=amount
+            )
             messages.success(request, f'Transfer completed successfully.\nYour balance is now {from_account.balance}')
-            #return redirect('account_list')
         else:
             messages.error(request, 'Insufficient funds.')
-            return HttpResponse("Insufficient funds")
     
     accounts = Account.objects.all() 
     return render(request, 'accounts/transfer.html', {'accounts': accounts})

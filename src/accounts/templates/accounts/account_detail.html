@@ -1,15 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Detail</title>
-</head>
-<body>
-    <h1>Account Detail</h1>
-    <p><strong>Name:</strong> {{ account.name}}</p>
-    <p><strong>Balance:</strong> ${{ account.balance }}</p>
-    <a href="{% url 'account_list' %}">Back to Account List</a>
-    <a href="{% url 'transfer_funds'%}">Transfer Funds</a>
-</body>
-</html>
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+    <h1>Account Details</h1>
+    <p><strong>Name:</strong> {{ account.name }}</p>
+    <p><strong>Account Number:</strong> {{ account.id|slice:":8" }}</p>
+    <p><strong>Balance:</strong> {{ account.balance }} $</p>
+
+    <!-- Displaying outgoing transactions -->
+    <h2>Outgoing Transactions</h2>
+    {% if outgoing_transactions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>To Account</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for outgoing_transaction in outgoing_transactions %}
+                <tr>
+                    <td>{{ outgoing_transaction.date }}</td>
+                    <td>{{ outgoing_transaction.to_account.name }}</td>
+                    <td>-{{ outgoing_transaction.amount }} $</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        <p>No outgoing transactions</p>
+    {% endif %}
+
+
+<!-- Displaying incoming transactions -->
+<h2>Incoming Transactions</h2>
+{% if incoming_transactions %}
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>From Account</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for incoming_transaction in incoming_transactions %}
+            <tr>
+                <td>{{ incoming_transaction.date }}</td>
+                <td>{{ incoming_transaction.from_account.name }}</td>
+                <td>+{{ incoming_transaction.amount }} $</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% else %}
+    <p>No incoming transactions</p>
+{% endif %}
+
+
+{% endblock %}
